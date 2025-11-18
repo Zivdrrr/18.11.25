@@ -39,6 +39,14 @@ class GameCharacter:
         return self.__max_health
 
     @property
+    def is_alive(self):
+        return self.__health > 0
+
+    @property
+    def health_percentage(self):
+        return (self.__health / self.__max_health) * 100
+
+    @property
     def attack_power(self):
         return self.__attack_power
 
@@ -67,13 +75,11 @@ class GameCharacter:
         self.health -= actual_damage
 
         print(f"{self.name} отримав {actual_damage} пошкоджень. "
-              f"Здоров'я: {self.health}/{self.max_health}")
+              f"Здоров'я: {self.health}/{self.max_health} "
+              f"({self.health_percentage:.1f}%)")
 
-        if self.health == 0:
+        if not self.is_alive:
             print(f"{self.name} помер!")
-
-    def is_alive(self):
-        return self.health > 0
 
     def level_up(self):
         self.level += 1
@@ -84,13 +90,13 @@ class GameCharacter:
         print(f"{self.name} піднявся до {self.level} рівня!")
 
     def get_info(self):
-        status = "живий" if self.is_alive() else "мертвий"
+        status = "живий" if self.is_alive else "мертвий"
         print(f"Персонаж: {self.name} ({status})")
         print(f"Рівень: {self.level}")
-        print(f"Здоров'я: {self.health}/{self.max_health}")
+        print(f"Здоров'я: {self.health}/{self.max_health} "
+              f"({self.health_percentage:.1f}%)")
         print(f"Сила атаки: {self.attack_power}")
         print(f"Захист: {self.defense}")
-
 
 hero = GameCharacter("Белегар", 100, 20, 10)
 enemy = GameCharacter("Горбак", 120, 15, 3)
@@ -100,9 +106,9 @@ enemy.get_info()
 
 print("\nПочаток бою")
 
-while hero.is_alive() and enemy.is_alive():
+while hero.is_alive and enemy.is_alive:
     hero.attack(enemy)
-    if enemy.is_alive():
+    if enemy.is_alive:
         enemy.attack(hero)
 
 print("\nБій закінчено")
